@@ -6,6 +6,9 @@ from config import settings
 
 
 class Student(AbstractUser):
+    '''
+    Описывается модель пользователя
+    '''
     email = models.EmailField(unique=True, verbose_name="Email")
     phone = models.CharField(
         max_length=35,
@@ -35,6 +38,9 @@ class Student(AbstractUser):
 
 
 class Payment(models.Model):
+    '''
+        Описывается модель покупки
+    '''
     TYPE_CHOICES = (
         ("course", "Курс"),
         ("lesson", "Урок"),
