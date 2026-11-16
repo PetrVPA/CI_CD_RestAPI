@@ -8,6 +8,7 @@ from rest_framework.views import APIView
 from django.shortcuts import get_object_or_404
 from rest_framework import status
 from study.models import Subscription
+from .tasks import send_course_update_email
 
 from study.models import Course, Lesson
 from study.paginators import CustomPagination
@@ -70,6 +71,14 @@ class CourseViewSet(viewsets.ModelViewSet):
             permission_classes = [IsOwner]
 
         return [permission() for permission in permission_classes]
+
+    def perform_update(self, serializer):
+        # 1. Сохраняем изменения (стандартное поведение)
+        instance = serializer.save()
+
+        # 2. Вызываем фоновую задачу Celery
+        # .delay() отправляет задачу в очередь Redis, не блокируя ответ сервера
+        send_course_update_email.delay(instance.id, instance.title)
 
 class LessonViewSet(viewsets.ModelViewSet):
     serializer_class = LessonSerializer

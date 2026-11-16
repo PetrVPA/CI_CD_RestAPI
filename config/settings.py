@@ -3,6 +3,7 @@
 import os
 import stripe
 from dotenv import load_dotenv
+from celery.schedules import crontab
 
 from pathlib import Path
 
@@ -37,6 +38,7 @@ INSTALLED_APPS = [
 
     "drf_yasg",
     "django_extensions",
+    "django_celery_beat",
 ]
 
 MIDDLEWARE = [
@@ -114,7 +116,7 @@ AUTH_PASSWORD_VALIDATORS = [
 
 LANGUAGE_CODE = "en-us"
 
-TIME_ZONE = "UTC"
+TIME_ZONE = "Europe/Moscow"
 
 USE_I18N = True
 
@@ -135,7 +137,7 @@ STATICFILES_DIRS = (
 # Email
 # https://docs.djangoproject.com/en/6.1/topics/email/#topic-email-configuration
 
-
+#EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
 EMAIL_BACKEND = "django.core.mail.backends.smtp.EmailBackend"
 EMAIL_HOST = "smtp.mail.ru"
 EMAIL_PORT = 465
@@ -161,3 +163,31 @@ REST_FRAMEWORK = {
 }
 
 STRIPE_SECRET_KEY = os.getenv("STRIPE_SECRET_KEY")
+
+REDIS_HOST = os.getenv('REDIS_HOST', 'localhost')
+REDIS_PORT = os.getenv('REDIS_PORT', '6379')
+REDIS_DB = os.getenv('REDIS_DB', '0')
+
+CELERY_BROKER_URL = f'redis://{REDIS_HOST}:{REDIS_PORT}/{REDIS_DB}'
+CELERY_RESULT_BACKEND = f'redis://{REDIS_HOST}:{REDIS_PORT}/{REDIS_DB}'
+
+# 3. Дополнительные настройки Celery
+CELERY_ACCEPT_CONTENT = ['application/json']
+CELERY_TASK_SERIALIZER = 'json'
+CELERY_RESULT_SERIALIZER = 'json'
+CELERY_TIMEZONE = 'Europe/Moscow' # Укажите ваш часовой пояс
+
+# 4. Настройки для Celery Beat (расписание)
+#CELERY_BEAT_SCHEDULER = 'django_celery_beat.schedulers:DatabaseScheduler'
+
+CELERY_BEAT_SCHEDULE = {
+    # Имя задачи (может быть любым)
+    'deactivate-inactive-users-every-day': {
+        'task': 'users.tasks.deactivate_inactive_users',  # Путь до вашей задачи
+        # Расписание: каждый день в 03:00 ночи
+        'schedule': crontab(hour=3, minute=0),
+
+        # Альтернатива: каждые 5 минут (для тестов)
+        # 'schedule': 300.0,
+    },
+}
