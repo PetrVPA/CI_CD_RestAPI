@@ -4,8 +4,6 @@ from rest_framework.serializers import ModelSerializer
 from study.models import Lesson, Course, Subscription
 from study.validators import YouTubeValidator
 
-
-
 class LessonSerializer(ModelSerializer):
     class Meta:
         model = Lesson
@@ -13,7 +11,6 @@ class LessonSerializer(ModelSerializer):
         validators = [
             YouTubeValidator(field='materials') # Укажите ваше поле
         ]
-
 
 class CourseSerializer(ModelSerializer):
     count_lesson_course = SerializerMethodField()
@@ -39,9 +36,6 @@ class CourseSerializer(ModelSerializer):
         # Проверяем наличие подписки в базе
         return Subscription.objects.filter(user=request.user, course=obj).exists()
 
-
-
-
 class CourseCountLessonSerializer(ModelSerializer):
     # Имя переменной должно совпадать с тем, что мы добавим в fields
     count_lesson_course = SerializerMethodField()
@@ -55,6 +49,3 @@ class CourseCountLessonSerializer(ModelSerializer):
         model = Course
         # Убедитесь, что 'id' и 'preview' тоже здесь, если они нужны в ответе
         fields = ("id", "title", "description", "count_lesson_course")
-
-
-
