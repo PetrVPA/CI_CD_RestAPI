@@ -1,8 +1,25 @@
-from django.contrib.auth.models import AbstractUser
+from django.contrib.auth.models import AbstractUser, UserManager
 from django.db import models
 
 import study
 from config import settings
+
+class StudentManager(UserManager):
+    def create_superuser(self, email, password=None, **extra_fields):
+        # Убираем username из обязательных параметров
+        extra_fields.setdefault('is_staff', True)
+        extra_fields.setdefault('is_superuser', True)
+        return self._create_user(email, password, **extra_fields)
+
+    def _create_user(self, email, password, **extra_fields):
+        if not email:
+            raise ValueError('Email обязателен')
+        email = self.normalize_email(email)
+        user = self.model(email=email, **extra_fields)
+        user.set_password(password)
+        user.save(using=self._db)
+        return user
+
 
 
 class Student(AbstractUser):
@@ -10,13 +27,7 @@ class Student(AbstractUser):
     Описывается модель пользователя
     '''
     email = models.EmailField(unique=True, verbose_name="Email")
-    phone = models.CharField(
-        max_length=35,
-        verbose_name="Телефон",
-        blank=True,
-        null=True,
-        help_text="Введите номер телефона",
-    )
+    phone = models.CharField(max_length=35, blank=True, null=True, verbose_name="Телефон")
     city = models.CharField(max_length=25, verbose_name="Город", blank=True, null=True)
     avatar = models.ImageField(
         upload_to="study/avatars/",
@@ -28,6 +39,9 @@ class Student(AbstractUser):
 
     USERNAME_FIELD = "email"
     REQUIRED_FIELDS = []
+
+    # Привязываем наш менеджер
+    objects = StudentManager()
 
     class Meta:
         verbose_name = "Студент"
