@@ -35,7 +35,7 @@ jobs:
           username: ${{ secrets.SERVER_USER }}
           key: ${{ secrets.SSH_PRIVATE_KEY }}
           script: |
-            cd /home/petr_vpa/project
+            cd /petr_vpa/project
             source venv/bin/activate
             git pull origin main
             pip install -r requirements.txt
