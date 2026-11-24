@@ -22,6 +22,7 @@ jobs:
           rm users/migrations/0*.py
           rm study/migrations/0*.py
           python manage.py makemigrations user study
+          
           python manage.py migrate
 
       - name: Run tests

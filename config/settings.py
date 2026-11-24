@@ -12,7 +12,7 @@ load_dotenv()
 stripe.api_key = os.getenv("STRIPE_SECRET_KEY")
 
 
-BASE_DIR = Path(__file__).resolve().parent.parent
+
 
 
 SECRET_KEY = os.getenv("SECRET_KEY")
@@ -125,6 +125,8 @@ USE_TZ = True
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/6.1/howto/static-files/
+
+BASE_DIR = Path(__file__).resolve().parent.parent
 
 STATIC_URL = "/static/"
 
