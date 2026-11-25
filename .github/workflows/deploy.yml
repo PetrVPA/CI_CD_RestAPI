@@ -44,4 +44,4 @@ jobs:
             python manage.py collectstatic --noinput
             # Перезагрузка сервиса (зависит от того, как вы запускаете проект)
             # Пример для Gunicorn через systemd:
-            sudo systemctl restart myproject.service
+            # sudo systemctl restart myproject.service
