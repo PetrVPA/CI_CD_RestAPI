@@ -35,7 +35,8 @@ jobs:
           username: ${{ secrets.SERVER_USER }}
           key: ${{ secrets.SSH_PRIVATE_KEY }}
           script: |            
-            cd /project
+            #cd /project
+            cd /home/petr_vpa/project
             source venv/bin/activate
             git pull origin main
             pip install -r requirements.txt
@@ -43,4 +44,4 @@ jobs:
             python manage.py collectstatic --noinput
             # Перезагрузка сервиса (зависит от того, как вы запускаете проект)
             # Пример для Gunicorn через systemd:
-            # sudo systemctl restart your_app_service
+            sudo systemctl restart myproject.service
