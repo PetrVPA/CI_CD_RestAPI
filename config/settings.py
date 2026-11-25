@@ -73,26 +73,29 @@ WSGI_APPLICATION = "config.wsgi.application"
 
 
 
-DATABASES = {
-    "default": {
-        #"ENGINE": "django.db.backends.postgresql_psycopg2",
-        "ENGINE": "django.db.backends.postgresql",
-        "NAME": os.getenv("NAME"),
-
-        "USER": os.getenv("USER"),
-
-        "PASSWORD": os.getenv("PASSWORD"),
-
-        "HOST": os.getenv("HOST"),
-
-        "PORT": os.getenv("PORT"),
-
-        "OPTIONS": {
-            "options": "-c search_path=public",
-            "client_encoding": "UTF8",
-        },
+if os.getenv("GITHUB_ACTIONS") == "true":
+    DATABASES = {
+        "default": {
+            "ENGINE": "django.db.backends.sqlite3",
+            "NAME": os.path.join(BASE_DIR, "db.sqlite3"),
+        }
     }
-}
+else:
+    DATABASES = {
+        "default": {
+            "ENGINE": "django.db.backends.postgresql",
+            "NAME": os.getenv("NAME"),
+            "USER": os.getenv("USER"),
+            "PASSWORD": os.getenv("PASSWORD"),
+            "HOST": os.getenv("HOST"),
+            "PORT": os.getenv("PORT"),
+            "OPTIONS": {
+                "options": "-c search_path=public",
+                "client_encoding": "UTF8",
+            },
+        }
+    }
+
 
 
 AUTH_PASSWORD_VALIDATORS = [
