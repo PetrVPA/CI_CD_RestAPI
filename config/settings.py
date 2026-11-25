@@ -12,7 +12,7 @@ load_dotenv()
 stripe.api_key = os.getenv("STRIPE_SECRET_KEY")
 
 
-
+BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
 
 SECRET_KEY = os.getenv("SECRET_KEY")
@@ -127,13 +127,6 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/6.1/howto/static-files/
 
 #BASE_DIR = Path(__file__).resolve().parent.parent
-BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-
-STATIC_URL = "/static/"
-
-STATICFILES_DIRS = [os.path.join(BASE_DIR, 'static')]
-
-STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 
 
 # Email
@@ -193,3 +186,9 @@ CELERY_BEAT_SCHEDULE = {
         # 'schedule': 300.0,
     },
 }
+
+STATIC_URL = "/static/"
+
+STATICFILES_DIRS = [os.path.join(BASE_DIR, 'static')]
+
+STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
