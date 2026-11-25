@@ -3,7 +3,6 @@ name: Django CI/CD Pipeline
 on:
   push:
     branches: [ main ]
-  workflow_dispatch:
 
 jobs:
   test:
