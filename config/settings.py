@@ -196,8 +196,6 @@ CELERY_BEAT_SCHEDULE = {
 
 STATIC_URL = "/static/"
 
-
-
 STATIC_ROOT = os.path.join(BASE_DIR, "staticfiles")
 
 STATICFILES_DIRS = [
